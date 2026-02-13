@@ -1,14 +1,14 @@
-﻿using Bulky.DataAccess.Data;
-using Bulky.DataAccess.Repository.IRepository;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using BulkyBook.DataAccess.Repository.IRepository;
+using BulkyBook.DataAcess.Data;
+using Microsoft.EntityFrameworkCore;
 
-namespace Bulky.DataAccess.Repository
+namespace BulkyBook.DataAccess.Repository
 {
     public class Repository<T> : IRepository<T> where T : class
     {
@@ -18,8 +18,10 @@ namespace Bulky.DataAccess.Repository
         {
             _db = db;
             this.dbSet = _db.Set<T>();
+            //_db.Categories == dbSet
             
         }
+
         public void Add(T entity)
         {
             dbSet.Add(entity);
@@ -30,6 +32,7 @@ namespace Bulky.DataAccess.Repository
             IQueryable<T> query = dbSet;
             query = query.Where(filter);
             return query.FirstOrDefault();
+
         }
 
         public IEnumerable<T> GetAll()

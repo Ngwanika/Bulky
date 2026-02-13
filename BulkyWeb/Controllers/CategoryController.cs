@@ -1,15 +1,13 @@
-﻿using Bulky.DataAccess.Repository.IRepository;
-using Bulky.DataAccess.Data;
-using Bulky.Models;
+﻿using BulkyBook.DataAccess.Repository.IRepository;
+using BulkyBook.DataAcess.Data;
+using BulkyBook.Models;
 using Microsoft.AspNetCore.Mvc;
-using BulkyBook.DataAccess.Repository.IRepository;
 
-namespace BulkyWeb.Controllers
+namespace BulkyBookWeb.Controllers
 {
     public class CategoryController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
-
         public CategoryController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
@@ -17,7 +15,6 @@ namespace BulkyWeb.Controllers
         public IActionResult Index()
         {
             List<Category> objCategoryList = _unitOfWork.Category.GetAll().ToList();
-            //return View();
             return View(objCategoryList);
         }
 
@@ -25,11 +22,14 @@ namespace BulkyWeb.Controllers
         {
             return View();
         }
-
         [HttpPost]
         public IActionResult Create(Category obj)
         {
-         
+            if (obj.Name == obj.DisplayOrder.ToString())
+            {
+                ModelState.AddModelError("name", "The DisplayOrder cannot exactly match the Name.");
+            }
+
             if (ModelState.IsValid)
             {
                 _unitOfWork.Category.Add(obj);
@@ -38,17 +38,18 @@ namespace BulkyWeb.Controllers
                 return RedirectToAction("Index");
             }
             return View();
+            
         }
 
         public IActionResult Edit(int? id)
         {
-            if (id == null || id == 0)
+            if(id==null || id == 0)
             {
                 return NotFound();
             }
-            Category? categoryFromDb = _unitOfWork.Category.Get(u => u.Id == id);
-           // Category? categoryFromDb1 = _db.Categories.FirstOrDefault(u => u.Id == id);
-           // Category? categoryFromDb2 = _db.Categories.Where(u => u.Id == id).FirstOrDefault();
+            Category? categoryFromDb = _unitOfWork.Category.Get(u=>u.Id==id);
+            //Category? categoryFromDb1 = _db.Categories.FirstOrDefault(u=>u.Id==id);
+            //Category? categoryFromDb2 = _db.Categories.Where(u=>u.Id==id).FirstOrDefault();
 
             if (categoryFromDb == null)
             {
@@ -59,11 +60,6 @@ namespace BulkyWeb.Controllers
         [HttpPost]
         public IActionResult Edit(Category obj)
         {
-            //if (obj.Name == obj.DisplayOrder.ToString())
-            //{
-            //    ModelState.AddModelError("name", "The DisplayOrder cannot exactly match the Name.");
-            //}
-
             if (ModelState.IsValid)
             {
                 _unitOfWork.Category.Update(obj);

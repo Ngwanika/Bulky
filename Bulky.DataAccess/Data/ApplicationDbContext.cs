@@ -1,20 +1,16 @@
-﻿using Bulky.DataAccess.Data;
+﻿using BulkyBook.Models;
 using Microsoft.EntityFrameworkCore;
-using Bulky.Models;
 
-namespace Bulky.DataAccess.Data
+namespace BulkyBook.DataAcess.Data
 {
     public class ApplicationDbContext : DbContext
     {
-
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) 
         {
-
 
         }
 
         public DbSet<Category> Categories { get; set; }
-
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -24,9 +20,5 @@ namespace Bulky.DataAccess.Data
                 new Category { Id = 3, Name = "History", DisplayOrder = 3 }
                 );
         }
-
-
     }
-
-
 }
